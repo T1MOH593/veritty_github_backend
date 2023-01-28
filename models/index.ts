@@ -20,7 +20,7 @@ let privateKey = process.env.GOOGLE_PRIVATE_KEY || ""
 privateKey = privateKey.replace(/\\n/gm, "\n")
 const CHAT_ID = process.env.CHAT_ID || ""
 const SHEET_ID = process.env.SHEET_ID;
-const doc = new GoogleSpreadsheet(SHEET_ID);
+// const doc = new GoogleSpreadsheet(SHEET_ID);
 const dbName = process.env.DB || ""
 const dbUser = process.env.DB_USER || ""
 const dbPassword = process.env.DB_PASSWORD || ""
@@ -110,8 +110,8 @@ app.post("/webhook", async (req, res) => {
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
         try {
 
-            await doc.loadInfo()
-            const sheet = doc.sheetsByIndex[0]
+            // await doc.loadInfo()
+            // const sheet = doc.sheetsByIndex[0]
 
 
             const decodedLogs = Moralis.Streams.parsedLogs<WinnerChosen>(webhookData);
