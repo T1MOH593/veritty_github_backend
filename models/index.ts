@@ -7,7 +7,7 @@ import { GoogleSpreadsheet } from "google-spreadsheet"
 import { Sequelize, DataTypes, Op } from 'sequelize';
 
 const app = express();
-const port = 5001;
+const port = process.env.PORT || 5001;
 
 import { BigNumber } from '@moralisweb3/core';
 
