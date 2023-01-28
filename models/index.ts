@@ -34,10 +34,10 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 });
 sequelize.sync().then(() => {
     app.listen(port, async () => {
-        await doc.useServiceAccountAuth({
-            private_key: privateKey,
-            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
-        });
+        // await doc.useServiceAccountAuth({
+        //     private_key: privateKey,
+        //     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
+        // });
         console.log(`Listening for NFT Transfers`);
         console.log("Сервер ожидает подключения...");
     });
