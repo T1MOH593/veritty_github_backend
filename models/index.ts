@@ -27,10 +27,14 @@ const dbPassword = process.env.DB_PASSWORD || ""
 const dbHost = process.env.DB_HOST || ""
 const dpPort = process.env.DB_PORT || ""
 
-const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
-    host: dbHost,
-    dialect: 'postgres',
-    port: Number(dpPort)
+// const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+//     host: dbHost,
+//     dialect: 'postgres',
+//     port: Number(dpPort),
+
+// });
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
 });
 const Txn = sequelize.define("txn", {
     id: {
@@ -118,11 +122,11 @@ app.post("/webhook", async (req, res) => {
                 const txHash = webhookData.logs[0].transactionHash
                 const txTimestamp = webhookData.block.timestamp
 
-                await sheet.addRow({
-                    TokenId: tokenId,
-                    Sum: sum,
-                    Player: player
-                });
+                // await sheet.addRow({
+                //     TokenId: tokenId,
+                //     Sum: sum,
+                //     Player: player
+                // });
                 const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
                 //                 await bot.sendMessage(CHAT_ID, text)
                 const a = await User.findOne({
