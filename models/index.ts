@@ -13,8 +13,8 @@ import { BigNumber } from '@moralisweb3/core';
 
 app.use(express.json());
 
-const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN || "";
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+// const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN || "";
+// const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 const secret = process.env.MORALIS_API_KEY || ""
 let privateKey = process.env.GOOGLE_PRIVATE_KEY || ""
 privateKey = privateKey.replace(/\\n/gm, "\n")
@@ -125,7 +125,7 @@ app.post("/webhook", async (req, res) => {
                     Player: player
                 });
                 const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
-                await bot.sendMessage(CHAT_ID, text)
+//                 await bot.sendMessage(CHAT_ID, text)
                 const a = await User.findOne({
                     where: {
                         id: player
