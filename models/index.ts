@@ -32,17 +32,6 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
     dialect: 'postgres',
     port: Number(dpPort)
 });
-sequelize.sync().then(() => {
-    app.listen(port, async () => {
-        // await doc.useServiceAccountAuth({
-        //     private_key: privateKey,
-        //     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
-        // });
-        console.log(`Listening for NFT Transfers`);
-        console.log("Сервер ожидает подключения...");
-    });
-}).catch(err => console.log(err));
-
 const Txn = sequelize.define("txn", {
     id: {
         type: DataTypes.STRING,
@@ -85,6 +74,18 @@ const User = sequelize.define("users", {
         allowNull: false
     }
 });
+sequelize.sync().then(() => {
+    app.listen(port, async () => {
+        // await doc.useServiceAccountAuth({
+        //     private_key: privateKey,
+        //     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
+        // });
+        console.log(`Listening for NFT Transfers`);
+        console.log("Сервер ожидает подключения...");
+    });
+}).catch(err => console.log(err));
+
+
 
 const Txns = User.hasMany(Txn, { as: "txns" })
 Txn.belongsTo(User,)
