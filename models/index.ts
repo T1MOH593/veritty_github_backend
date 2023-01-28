@@ -25,10 +25,12 @@ const dbName = process.env.DB || ""
 const dbUser = process.env.DB_USER || ""
 const dbPassword = process.env.DB_PASSWORD || ""
 const dbHost = process.env.DB_HOST || ""
+const dpPort = process.env.DB_PORT || ""
 
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
     host: dbHost,
-    dialect: 'postgres'
+    dialect: 'postgres',
+    port: Number(dpPort)
 });
 sequelize.sync().then(() => {
     app.listen(port, async () => {
@@ -112,7 +114,7 @@ app.post("/webhook", async (req, res) => {
             const decodedLogs = Moralis.Streams.parsedLogs<WinnerChosen>(webhookData);
             for (let i = 0; i < decodedLogs.length; i++) {
                 const tokenId = decodedLogs[0].tokenId.toString()
-                const sum = decodedLogs[0].sum.toString()
+                let sum = Number(decodedLogs[0].sum.toBigInt())
                 const player = decodedLogs[0].player
                 const txHash = webhookData.logs[0].transactionHash
                 const txTimestamp = webhookData.block.timestamp
