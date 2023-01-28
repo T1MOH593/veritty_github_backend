@@ -88,8 +88,6 @@ const User = sequelize.define("users", {
 
 const Txns = User.hasMany(Txn, { as: "txns" })
 Txn.belongsTo(User,)
-Txn.sync()
-User.sync()
 
 app.post("/webhook", async (req, res) => {
     interface WinnerChosen {
@@ -125,7 +123,7 @@ app.post("/webhook", async (req, res) => {
                     Player: player
                 });
                 const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
-//                 await bot.sendMessage(CHAT_ID, text)
+                //                 await bot.sendMessage(CHAT_ID, text)
                 const a = await User.findOne({
                     where: {
                         id: player
