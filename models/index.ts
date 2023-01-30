@@ -125,13 +125,20 @@ app.post("/webhook", async (req, res) => {
                 const txHash = webhookData.logs[0].transactionHash
                 const txTimestamp = webhookData.block.timestamp
 
-                await sheet.addRow({
-                    TokenId: tokenId,
-                    Sum: sum,
-                    Player: player
-                });
-                const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
-                await bot.sendMessage(CHAT_ID, text)
+                const maybeTx = await Txn.findOne({
+                    where: {
+                        id: txHash
+                    }
+                })
+                if (maybeTx === null) {
+                    sheet.addRow({
+                        TokenId: tokenId,
+                        Sum: sum,
+                        Player: player
+                    });
+                    const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
+                    bot.sendMessage(CHAT_ID, text)
+                }
                 const a = await User.findOne({
                     where: {
                         id: player
