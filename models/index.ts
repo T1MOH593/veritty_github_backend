@@ -16,14 +16,14 @@ app.use(express.json(), cors({
     origin: '*'
 }));
 
-// const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN || "";
-// const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN || "";
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 const secret = process.env.MORALIS_API_KEY || ""
 let privateKey = process.env.GOOGLE_PRIVATE_KEY || ""
 privateKey = privateKey.replace(/\\n/gm, "\n")
 const CHAT_ID = process.env.CHAT_ID || ""
 const SHEET_ID = process.env.SHEET_ID;
-// const doc = new GoogleSpreadsheet(SHEET_ID);
+const doc = new GoogleSpreadsheet(SHEET_ID);
 const dbName = process.env.DB || ""
 const dbUser = process.env.DB_USER || ""
 const dbPassword = process.env.DB_PASSWORD || ""
@@ -83,10 +83,10 @@ const User = sequelize.define("users", {
 });
 sequelize.sync().then(() => {
     app.listen(port, async () => {
-        // await doc.useServiceAccountAuth({
-        //     private_key: privateKey,
-        //     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
-        // });
+        await doc.useServiceAccountAuth({
+            private_key: privateKey,
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
+        });
         console.log(`Listening for NFT Transfers`);
         console.log("Сервер ожидает подключения...");
     });
@@ -103,18 +103,18 @@ app.post("/webhook", async (req, res) => {
         sum: BigNumber;
         player: string
     }
-    // try {
-    //     verifySignature(req, secret)
-    // } catch (e) {
-    //     return res.status(404).json();
-    // }
+    try {
+        verifySignature(req, secret)
+    } catch (e) {
+        return res.status(404).json();
+    }
 
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
         try {
 
-            // await doc.loadInfo()
-            // const sheet = doc.sheetsByIndex[0]
+            await doc.loadInfo()
+            const sheet = doc.sheetsByIndex[0]
 
 
             const decodedLogs = Moralis.Streams.parsedLogs<WinnerChosen>(webhookData);
@@ -125,13 +125,13 @@ app.post("/webhook", async (req, res) => {
                 const txHash = webhookData.logs[0].transactionHash
                 const txTimestamp = webhookData.block.timestamp
 
-                // await sheet.addRow({
-                //     TokenId: tokenId,
-                //     Sum: sum,
-                //     Player: player
-                // });
+                await sheet.addRow({
+                    TokenId: tokenId,
+                    Sum: sum,
+                    Player: player
+                });
                 const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
-                //                 await bot.sendMessage(CHAT_ID, text)
+                await bot.sendMessage(CHAT_ID, text)
                 const a = await User.findOne({
                     where: {
                         id: player
