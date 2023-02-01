@@ -113,9 +113,6 @@ app.post("/webhook", async (req, res) => {
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
         try {
-            const sheet = doc.sheetsByIndex[0]
-
-
             const decodedLogs = Moralis.Streams.parsedLogs<WinnerChosen>(webhookData);
             for (let i = 0; i < decodedLogs.length; i++) {
                 const tokenId = decodedLogs[i].tokenId.toString()
@@ -130,7 +127,12 @@ app.post("/webhook", async (req, res) => {
                     }
                 })
                 if (maybeTx === null) {
-                    await sheet.addRow([tokenId, sum, player]);
+                    const sheet = doc.sheetsByIndex[0]
+                    await sheet.addRow({
+                        TokenId: tokenId,
+                        Sum: sum,
+                        Player: player
+                    });
                     const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
                     await bot.sendMessage(CHAT_ID, text)
                 }
