@@ -130,11 +130,7 @@ app.post("/webhook", async (req, res) => {
                     }
                 })
                 if (maybeTx === null) {
-                    const result = await sheet.addRow({
-                        TokenId: tokenId,
-                        Sum: sum,
-                        Player: player
-                    });
+                    await sheet.addRow([tokenId, sum, player]);
                     const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
                     await bot.sendMessage(CHAT_ID, text)
                 }
