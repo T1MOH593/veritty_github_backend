@@ -87,6 +87,7 @@ sequelize.sync().then(() => {
             private_key: privateKey,
             client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "",
         });
+        await doc.loadInfo()
         console.log(`Listening for NFT Transfers`);
         console.log("Сервер ожидает подключения...");
     });
@@ -112,17 +113,15 @@ app.post("/webhook", async (req, res) => {
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
         try {
-
-            await doc.loadInfo()
             const sheet = doc.sheetsByIndex[0]
 
 
             const decodedLogs = Moralis.Streams.parsedLogs<WinnerChosen>(webhookData);
             for (let i = 0; i < decodedLogs.length; i++) {
-                const tokenId = decodedLogs[0].tokenId.toString()
-                let sum = Number(decodedLogs[0].sum.toBigInt())
-                const player = decodedLogs[0].player
-                const txHash = webhookData.logs[0].transactionHash
+                const tokenId = decodedLogs[i].tokenId.toString()
+                let sum = Number(decodedLogs[i].sum.toBigInt())
+                const player = decodedLogs[i].player
+                const txHash = webhookData.logs[i].transactionHash
                 const txTimestamp = webhookData.block.timestamp
 
                 const maybeTx = await Txn.findOne({
