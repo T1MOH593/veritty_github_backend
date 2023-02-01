@@ -130,13 +130,13 @@ app.post("/webhook", async (req, res) => {
                     }
                 })
                 if (maybeTx === null) {
-                    sheet.addRow({
+                    const result = await sheet.addRow({
                         TokenId: tokenId,
                         Sum: sum,
                         Player: player
                     });
                     const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
-                    bot.sendMessage(CHAT_ID, text)
+                    await bot.sendMessage(CHAT_ID, text)
                 }
                 const a = await User.findOne({
                     where: {
@@ -181,12 +181,6 @@ app.post("/webhook", async (req, res) => {
                             id: player
                         }
                     })
-
-                    user = await User.findOne({
-                        where: { id: player }, include: [User.associations.txns]
-                    })
-                    const txns = user.getDataValue("txns")
-                    console.log(txns)
                 }
             }
         } catch (e) {
