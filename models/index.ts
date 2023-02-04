@@ -104,11 +104,11 @@ app.post("/webhook", async (req, res) => {
         sum: BigNumber;
         player: string
     }
-    try {
-        verifySignature(req, secret)
-    } catch (e) {
-        return res.status(404).json();
-    }
+    // try {
+    //     verifySignature(req, secret)
+    // } catch (e) {
+    //     return res.status(404).json();
+    // }
 
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
@@ -255,6 +255,21 @@ app.get("/sums", async (req, res) => {
     })
 
     return res.send(sumToTxns)
+})
+
+app.get("/lastTxns", async (req, res) => {
+    let txns = await Txn.findAll({
+        where: {
+            sum: {
+                [Op.gt]: 0
+            }
+        }
+    })
+
+    txns.sort((t1, t2) => t2.getDataValue("timestamp") - t1.getDataValue("timestamp"))
+    txns = txns.length <= 10 ? txns : txns.slice(0, 10)
+
+    return res.send(txns)
 })
 
 const verifySignature = (req: any, secret: string) => {
