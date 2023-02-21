@@ -126,7 +126,7 @@ app.post("/webhook", async (req, res) => {
                         id: txHash
                     }
                 })
-                if (maybeTx === null && sum != 0) {
+                if (maybeTx === null && sum !== 0) {
                     const sheet = doc.sheetsByIndex[0]
                     await sheet.addRow({
                         TokenId: tokenId,
@@ -219,8 +219,8 @@ app.get("/leaderboard", async (req, res) => {
 
         users.sort((user1, user2) => user2.getDataValue("totalSum") - user1.getDataValue("totalSum"))
 
-        const end = users.length <= 2 ? users.length : 2
-        users = users.slice(0, end)
+        // const end = users.length <= 2 ? users.length : 2
+        // users = users.slice(0, end)
 
         return res.send(users)
     } catch (e) {
