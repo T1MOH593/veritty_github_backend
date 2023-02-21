@@ -104,11 +104,11 @@ app.post("/webhook", async (req, res) => {
         sum: BigNumber;
         player: string
     }
-    // try {
-    //     verifySignature(req, secret)
-    // } catch (e) {
-    //     return res.status(404).json();
-    // }
+    try {
+        verifySignature(req, secret)
+    } catch (e) {
+        return res.status(404).json();
+    }
 
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
@@ -126,14 +126,15 @@ app.post("/webhook", async (req, res) => {
                         id: txHash
                     }
                 })
-                if (maybeTx === null) {
+                if (maybeTx === null && sum != 0) {
                     const sheet = doc.sheetsByIndex[0]
                     await sheet.addRow({
                         TokenId: tokenId,
                         Sum: sum,
                         Player: player
                     });
-                    const text = `Player ${player} minted Ticket with id ${tokenId} and won ${sum} USDT`
+                    const link = "https://goerli.etherscan.io/tx/"
+                    const text = `Player ${player} won ${sum} USDT ${link}${txHash}`
                     await bot.sendMessage(CHAT_ID, text)
                 }
                 const a = await User.findOne({
