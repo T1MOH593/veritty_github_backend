@@ -108,11 +108,11 @@ app.post("/webhook", async (req, res) => {
         sum: BigNumber;
         player: string
     }
-    try {
-        verifySignature(req, secret)
-    } catch (e) {
-        return res.status(404).json();
-    }
+    // try {
+    //     verifySignature(req, secret)
+    // } catch (e) {
+    //     return res.status(404).json();
+    // }
 
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
@@ -225,9 +225,6 @@ app.get("/leaderboard", async (req, res) => {
 
         users.sort((user1, user2) => user2.getDataValue("totalSum") - user1.getDataValue("totalSum"))
 
-        // const end = users.length <= 2 ? users.length : 2
-        // users = users.slice(0, end)
-
         return res.send(users)
     } catch (e) {
         console.log(e)
@@ -246,7 +243,17 @@ app.get("/metadata/:id", async (req, res) => {
                 sum = sums[i]
             }
         }
-        var jsonData = `{"name": "Ticket #` + id + `","description": "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\\n\\n - Immediate results, prize fund of 282 700 USDT\\n - 888 winning tickets of 10888\\n - Payments to the winner's wallet within 24 hours\\n - 23 000 USDT - Second Round for No Winners\\n\\n For more Information - visit verity.io","image": "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/` + sum + `.png","attributes": [{"display_type": "number", "trait_type": "USDT prize", "value": ` + sum + `}]}`
+        //         var jsonData = `{"name": "Ticket #` + id + `","description": "","image": "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/` + sum + `.png","attributes": [{"display_type": "number", , + `}]}`
+        var jsonData = {
+            'name': "Ticket #" + id,
+            'description': "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\\n\\n - Immediate results, prize fund of 282 700 USDT\\n - 888 winning tickets of 10888\\n - Payments to the winner's wallet within 24 hours\\n - 23 000 USDT - Second Round for No Winners\\n\\n For more Information - visit verity.io",
+            'image': "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/",
+            'attributes': [{
+                'display_type': "number",
+                'trait_type': "USDT prize",
+                'value': sum
+            }]
+        }
         return res.send(jsonData)
 
     } catch (e) {
