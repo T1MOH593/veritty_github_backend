@@ -108,11 +108,11 @@ app.post("/webhook", async (req, res) => {
         sum: BigNumber;
         player: string
     }
-    // try {
-    //     verifySignature(req, secret)
-    // } catch (e) {
-    //     return res.status(404).json();
-    // }
+    try {
+        verifySignature(req, secret)
+    } catch (e) {
+        return res.status(404).json();
+    }
 
     const webhookData = req.body
     if (webhookData.abi.length !== 0 || webhookData.logs.length !== 0) {
