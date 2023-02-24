@@ -234,6 +234,7 @@ app.get("/leaderboard", async (req, res) => {
 
 app.get("/metadata/:id", async (req, res) => {
     try {
+        console.log("TOKEN ID:" + req.params.id)
         const id = Number(req.params.id)
         const tokenIds = [0, 1, 3, 6, 10, 15, 25, 40, 89, 888]
         const sums = [50_000, 20_000, 10_000, 5_000, 2_500, 1_000, 500, 200, 100, 0]
@@ -246,7 +247,7 @@ app.get("/metadata/:id", async (req, res) => {
         //         var jsonData = `{"name": "Ticket #` + id + `","description": "","image": "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/` + sum + `.png","attributes": [{"display_type": "number", , + `}]}`
         var jsonData = {
             'name': "Ticket #" + id,
-            'description': "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\\n\\n - Immediate results, prize fund of 282 700 USDT\\n - 888 winning tickets of 10888\\n - Payments to the winner's wallet within 24 hours\\n - 23 000 USDT - Second Round for No Winners\\n\\n For more Information - visit verity.io",
+            'description': "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\n\n - Immediate results, prize fund of 282 700 USDT\n - 888 winning tickets of 10888\n - Payments to the winner's wallet within 24 hours\n - 23 000 USDT - Second Round for No Winners\n\n For more Information - visit verity.io",
             'image': "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/" + sum + ".png",
             'attributes': [{
                 'display_type': "number",
