@@ -45,6 +45,10 @@ const Txn = sequelize.define("txn", {
         primaryKey: true,
         allowNull: false
     },
+    tokenId: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
     link: {
         type: DataTypes.STRING,
         allowNull: false
@@ -153,6 +157,7 @@ app.post("/webhook", async (req, res) => {
                             {
                                 id: txHash,
                                 link: "https://goerli.etherscan.io/tx/" + txHash,
+                                tokenId: tokenId,
                                 userId: player,
                                 sum: sum,
                                 timestamp: txTimestamp
@@ -169,6 +174,7 @@ app.post("/webhook", async (req, res) => {
                         id: txHash,
                         link: "https://goerli.etherscan.io/tx/" + txHash,
                         userId: player,
+                        tokenId: tokenId,
                         sum: sum,
                         timestamp: txTimestamp
                     })
@@ -229,6 +235,26 @@ app.get("/leaderboard", async (req, res) => {
     }
 })
 
+app.get("/metadata/:id", async (req, res) => {
+    try {
+        const id = Number(req.params.id)
+        const tokenIds = [0, 1, 3, 6, 10, 15, 25, 40, 89, 888]
+        const sums = [50_000, 20_000, 10_000, 5_000, 2_500, 1_000, 500, 200, 100, 0]
+        let sum = 0
+        for (let i = 0; i < sums.length; i++) {
+            if (tokenIds[i] <= id) {
+                sum = sums[i]
+            }
+        }
+        var jsonData = `{"name": "Ticket #` + id + `","description": "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\\n\\n - Immediate results, prize fund of 282 700 USDT\\n - 888 winning tickets of 10888\\n - Payments to the winner's wallet within 24 hours\\n - 23 000 USDT - Second Round for No Winners\\n\\n For more Information - visit verity.io","image": "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/` + sum + `.png","attributes": [{"display_type": "number", "trait_type": "USDT prize", "value": ` + sum + `}]}`
+        return res.send(jsonData)
+
+    } catch (e) {
+        console.log(e)
+        return res.status(500).json()
+    }
+})
+
 app.get("/sums", async (req, res) => {
     let txns = await Txn.findAll({
         where: {
@@ -251,6 +277,7 @@ app.get("/sums", async (req, res) => {
             id: txn.dataValues.id,
             userId: txn.dataValues.userId,
             sum: txn.dataValues.sum,
+            tokenId: txn.dataValues.tokenId,
         })
         sumToTxns[sum] = txns
     })
