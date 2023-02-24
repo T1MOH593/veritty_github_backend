@@ -247,7 +247,7 @@ app.get("/metadata/:id", async (req, res) => {
         var jsonData = {
             'name': "Ticket #" + id,
             'description': "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\\n\\n - Immediate results, prize fund of 282 700 USDT\\n - 888 winning tickets of 10888\\n - Payments to the winner's wallet within 24 hours\\n - 23 000 USDT - Second Round for No Winners\\n\\n For more Information - visit verity.io",
-            'image': "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/",
+            'image': "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/" + sum + ".png",
             'attributes': [{
                 'display_type': "number",
                 'trait_type': "USDT prize",
