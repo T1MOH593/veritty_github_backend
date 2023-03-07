@@ -10,6 +10,8 @@ import { Sequelize, DataTypes, Op } from 'sequelize';
 const app = express();
 const port = process.env.PORT || 3001;
 
+const ipfsUrl = "ipfs://QmbMx2xWU1h5vduCdbqAx1v75u1y6iy1f2HMyracGz2tu6/"
+
 import { BigNumber } from '@moralisweb3/core';
 
 app.use(express.json(), cors({
@@ -17,7 +19,7 @@ app.use(express.json(), cors({
 }));
 
 const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN || "";
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+// const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 const secret = process.env.MORALIS_API_KEY || ""
 let privateKey = process.env.GOOGLE_PRIVATE_KEY || ""
 privateKey = privateKey.replace(/\\n/gm, "\n")
@@ -29,6 +31,12 @@ const dbUser = process.env.DB_USER || ""
 const dbPassword = process.env.DB_PASSWORD || ""
 const dbHost = process.env.DB_HOST || ""
 const dpPort = process.env.DB_PORT || ""
+
+// bot.onText(/\/echo (.+)/, (msg, match) => {
+  
+//     const chatId = msg.chat.id;
+//     const resp = match[1];
+//   });
 
 // const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 //     host: dbHost,
@@ -139,7 +147,7 @@ app.post("/webhook", async (req, res) => {
                     });
                     const link = "https://goerli.etherscan.io/tx/"
                     const text = `Player ${player} won ${sum} USDT ${link}${txHash}`
-                    await bot.sendMessage(CHAT_ID, text)
+                    // await bot.sendMessage(CHAT_ID, text)
                 }
                 const a = await User.findOne({
                     where: {
@@ -236,19 +244,19 @@ app.get("/metadata/:id", async (req, res) => {
     try {
         console.log("TOKEN ID:" + req.params.id)
         const id = Number(req.params.id)
-        const tokenIds = [0, 1, 3, 6, 10, 15, 25, 40, 89, 888]
-        const sums = [50_000, 20_000, 10_000, 5_000, 2_500, 1_000, 500, 200, 100, 0]
+        const tokenIds = [0, 1, 3, 6, 10, 15, 25, 40, 80, 1980]
+        const sums = [30_000, 15_000, 7_000, 3_500, 1_500, 700, 300, 150, 100, 0]
         let sum = 0
         for (let i = 0; i < sums.length; i++) {
             if (tokenIds[i] <= id) {
                 sum = sums[i]
             }
         }
-        //         var jsonData = `{"name": "Ticket #` + id + `","description": "","image": "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/` + sum + `.png","attributes": [{"display_type": "number", , + `}]}`
+
         var jsonData = {
             'name': "Ticket #" + id,
-            'description': "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\n\n - Immediate results, prize fund of 282 700 USDT\n - 888 winning tickets of 10888\n - Payments to the winner's wallet within 24 hours\n - 23 000 USDT - Second Round for No Winners\n\n For more Information - visit verity.io",
-            'image': "ipfs://QmVzJr3ncNipwupCTiSH6fDDUyzwktVbhXrXdPN5pS2RpG/" + sum + ".png",
+            'description': "The world's first transparent and honest NFT LOTTERY with instant wins and fast payouts right to your wallet.\n\n - Immediate results, prize fund of 333,000 USDT\n - 2000 winning tickets of 12000\n - Payments to the winner's wallet within 24 hours\n - 23 000 USDT - Second Round for No Winners\n\n For more Information - visit verity.io",
+            'image': ipfsUrl + sum + ".png",
             'attributes': [{
                 'display_type': "number",
                 'trait_type': "USDT prize",
