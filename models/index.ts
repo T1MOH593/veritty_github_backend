@@ -19,7 +19,7 @@ app.use(express.json(), cors({
 }));
 
 const TELEGRAM_BOT_TOKEN: string = process.env.TELEGRAM_BOT_TOKEN || "";
-// const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 const secret = process.env.MORALIS_API_KEY || ""
 let privateKey = process.env.GOOGLE_PRIVATE_KEY || ""
 privateKey = privateKey.replace(/\\n/gm, "\n")
@@ -31,12 +31,6 @@ const dbUser = process.env.DB_USER || ""
 const dbPassword = process.env.DB_PASSWORD || ""
 const dbHost = process.env.DB_HOST || ""
 const dpPort = process.env.DB_PORT || ""
-
-// bot.onText(/\/echo (.+)/, (msg, match) => {
-  
-//     const chatId = msg.chat.id;
-//     const resp = match[1];
-//   });
 
 // const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 //     host: dbHost,
@@ -147,7 +141,7 @@ app.post("/webhook", async (req, res) => {
                     });
                     const link = "https://goerli.etherscan.io/tx/"
                     const text = `Player ${player} won ${sum} USDT ${link}${txHash}`
-                    // await bot.sendMessage(CHAT_ID, text)
+                    await bot.sendMessage(CHAT_ID, text)
                 }
                 const a = await User.findOne({
                     where: {
